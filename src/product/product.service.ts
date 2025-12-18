@@ -9,18 +9,36 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './product.schema';
 import { Model } from 'mongoose';
+import { Category } from 'src/category/category.schema';
+import { SubCategory } from 'src/sub_category/subCategory.schema';
 
 @Injectable()
 export class ProductService {
   constructor(
     @InjectModel(Product.name) private ProductModel: Model<Product>,
+    @InjectModel(Category.name) private categoryModel: Model<Category>,
+    @InjectModel(Category.name) private subCategoryModel: Model<SubCategory>,
   ) {}
   async create(createProductDto: CreateProductDto) {
     const product = await this.ProductModel.findOne({
       title: createProductDto.title,
     });
+    const category = await this.categoryModel.findById({
+      category: createProductDto.category,
+    });
     if (product) {
       throw new HttpException('Product with this title already exists', 400);
+    }
+    if (!category) {
+      throw new HttpException('Category not found', 404);
+    }
+    if (createProductDto.subCategory) {
+      const subCategory = await this.subCategoryModel.findById({
+        subCategory: createProductDto.subCategory,
+      });
+      if (!subCategory) {
+        throw new HttpException('SubCategory not found', 404);
+      }
     }
     const priceAfterDiscount = createProductDto?.priceAfterDiscount || 0; // افتراضى لو مش موجود
     if (createProductDto.price < priceAfterDiscount) {
@@ -107,6 +125,22 @@ export class ProductService {
     );
     if (!product) {
       throw new HttpException('Product not found', 404);
+    }
+    if (updateProductDto.category) {
+      const category = await this.categoryModel.findById(
+        updateProductDto.category,
+      );
+      if (!category) {
+        throw new HttpException('Category not found', 404);
+      }
+    }
+    if (updateProductDto.subCategory) {
+      const subCategory = await this.subCategoryModel.findById(
+        updateProductDto.subCategory,
+      );
+      if (!subCategory) {
+        throw new HttpException('SubCategory not found', 404);
+      }
     }
     const priceAfterDiscount =
       updateProductDto?.priceAfterDiscount || product.priceAfterDiscount;
