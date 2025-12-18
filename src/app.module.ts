@@ -1,0 +1,56 @@
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module';
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './auth/auth.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { CategoryModule } from './category/category.module';
+import { SubCategoryModule } from './sub_category/sub_category.module';
+import { BrandModule } from './brand/brand.module';
+import { CouponModule } from './coupon/coupon.module';
+import { SuppliersModule } from './suppliers/suppliers.module';
+import { RequestProductModule } from './request-product/request-product.module';
+import { ProductModule } from './product/product.module';
+import { ReviewModule } from './review/review.module';
+import { CartModule } from './cart/cart.module';
+import { OrderModule } from './order/order.module';
+import { TaxModule } from './tax/Tax.module';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot(), // to use .env file
+    MongooseModule.forRoot('mongodb://localhost:27017/ecommerce_nestjs'),
+    UserModule,
+    JwtModule.register({
+      // to use jwt
+      global: true,
+      secret: process.env.JWT_Secret,
+      signOptions: { expiresIn: '60s' },
+    }),
+    AuthModule,
+    MailerModule.forRoot({
+      transport: {
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+    }),
+    CategoryModule,
+    SubCategoryModule,
+    BrandModule,
+    CouponModule,
+    SuppliersModule,
+    RequestProductModule,
+    TaxModule,
+    ProductModule,
+    ReviewModule,
+    CartModule,
+    OrderModule,
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule {}
