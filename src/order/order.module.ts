@@ -4,6 +4,7 @@ import {
   CheckoutCardController,
   OrderController,
   OrderControllerGet,
+  OrderControllerGetforAdmin,
 } from './order.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Order, OrderSchema } from './order.schema';
@@ -20,7 +21,12 @@ import { Product, ProductSchema } from 'src/product/product.schema';
       { name: Product.name, schema: ProductSchema },
     ]),
   ],
-  controllers: [OrderController, CheckoutCardController, OrderControllerGet],
+  controllers: [
+    OrderController,
+    CheckoutCardController,
+    OrderControllerGet,
+    OrderControllerGetforAdmin,
+  ],
   providers: [OrderService],
 })
 export class OrderModule {}

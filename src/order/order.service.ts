@@ -259,7 +259,15 @@ export class OrderService {
     };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  findAll() {
+    const orders = this.orderModel.find();
+    if (!orders) {
+      throw new HttpException('No orders found', 404);
+    }
+    return {
+      status: 200,
+      message: 'Orders found successfully',
+      data: orders,
+    };
   }
 }

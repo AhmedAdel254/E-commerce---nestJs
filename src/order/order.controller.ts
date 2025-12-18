@@ -68,7 +68,6 @@ export class OrderController {
     return this.orderService.updatePaidCash(orderId, updateOrderDto);
   }
 }
-
 // webhook for stripe to update the order status to paid
 @Controller('v1/checkout/session')
 export class CheckoutCardController {
@@ -89,7 +88,7 @@ export class CheckoutCardController {
   }
 }
 // get order (عشان مش هتبق علي نفس endpoint بتاعة الكرييت))
-@Controller('order')
+@Controller('order/user')
 export class OrderControllerGet {
   constructor(private readonly orderService: OrderService) {}
 
@@ -102,6 +101,27 @@ export class OrderControllerGet {
       throw new HttpException('Admin can not get order', 400);
     }
     const userId = req.user._id;
+    return this.orderService.findOne(userId);
+  }
+}
+
+//get order for admin
+@Controller('order/admin')
+export class OrderControllerGetforAdmin {
+  constructor(private readonly orderService: OrderService) {}
+  //admin can get all order
+  @Get()
+  @Roles(['admin'])
+  @UseGuards(AuthGuard)
+  findAllOrder() {
+    return this.orderService.findAll();
+  }
+
+  //admin can get single order by id
+  @Get(':userId')
+  @Roles(['admin'])
+  @UseGuards(AuthGuard)
+  findOneOrder(@Param('userId') userId: string) {
     return this.orderService.findOne(userId);
   }
 }
