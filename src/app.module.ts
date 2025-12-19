@@ -16,6 +16,7 @@ import { ReviewModule } from './review/review.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { TaxModule } from './tax/Tax.module';
+import { UploadFilesModule } from './upload-files/upload-files.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { TaxModule } from './tax/Tax.module';
     ReviewModule,
     CartModule,
     OrderModule,
+    UploadFilesModule,
   ],
   controllers: [],
   providers: [],
